@@ -31,10 +31,18 @@ async function getUserById(req, res) {
             }
         });
 
-        res.status(200).json({
-            status: 'success',
-            data
-        })
+         // validasi jika id tidak ditemukan
+         if (data) {
+            res.status(200).json({
+                status: "success",
+                data,
+            });
+        } else {
+            res.status(404).json({
+                status : "failed",
+                message: "Id tidak terdaftar"
+            });
+        }
     } catch (err) {
         res.status(404).json({
             status: 'failed',
@@ -96,12 +104,21 @@ async function createUser(req, res) {
             password : hashedPassword,
             role: req.body.role
         })
-        res.status(201).json({
-            status: 'success',
-            data: {
-                user: newUser
-            }
-        })
+         // validasi password minimal 8 karakter, tp data masih masuk
+         if (password.length >= 8) {
+            res.status(201).json({
+                status: 'success',
+                data: {
+                    user: newUser
+                }
+            });
+        }
+        else {
+            res.status(404).json({
+                status: 'failed',
+                message: `Password harus memiliki minimal 8 karakter`
+            });
+        }
     } catch (err) {
         res.status(400).json({
             status: 'failed',

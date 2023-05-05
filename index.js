@@ -1,141 +1,140 @@
 // import atau panggil package yang kita mau pake di aplikasi kita
 const express = require('express');
-const path = require("path");
-const { product } = require('./models')
-const bodyParser = require('body-parser');
-const routes = require('./routes');
+// untuk baca public directory
+const path =require("path");
+const{product} = require("./models");
 const { default: axios } = require('axios');
 const { Op } = require('sequelize');
 
-// yang bantu upload file
+// bantu upload file
 const imagekit = require('./lib/imagekit')
 const upload = require('./middleware/uploader')
+
 
 // framework utk http server
 const app = express();
 const PORT = 3000;
 
+// middleware, untuk baca json
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 // proses baca json 
+// const bodyParser = require('body-parser');
+const routes = require('./routes');
 
 // setting view engine
-app.set("views", __dirname + "/views");
+app.set("views", __dirname +"/views");
 app.set("view engine", "ejs");
 
-// public
+// publicc
 app.use(express.static(path.join(__dirname, "public")))
 app.use(express.static(path.join(__dirname, "controller")))
 
-// url utama dari aplikasi
-// req = request 
-// res = response
-// app.get('/', (req, res) => {
-//     res.send('Hello FSW 3 yang luar biasa dari server nih !');
-// })
-
 app.get('/', (req, res) => {
     res.render("index", {
-        name: 'Bagus',
-        status: 'tanda tanya',
-        title: 'Hello FSW 3 yang luar biasa dari client side nih !'
+        name : "theree",
+        status : 'tanda tanya',
+        title : 'fsw - 3'
     })
 })
 
-app.get('/admin/products', async (req, res) => {
-    try {
-        // melakukan check jika ada req.query.stock
-        if (req.query.stock) {
-            // parse req.query.stock yg awalnya string => number
-            const requestStock = Number(req.query.stock)
+// admin shop
+// app.get('/admin/products', async (req, res) => {
+//     try {
 
-            // check mau nya query apa, kurang dari atau kurang dari
-            if (req.query.filter === 'kurang') {
-                // proses ambil data product sesuai request query stock kurang dari
-                const products = await product.findAll({
-                    order: [['id', 'ASC']],
-                    where: {
-                        stock: {
-                            [Op.lte]: requestStock
-                        }
-                    }
-                });
-                res.render("products/index", {
-                    products
-                })
-            } else {
-                // proses ambil data product sesuai request query stock dan lebih dari
-                const products = await product.findAll({
-                    order: [['id', 'ASC']],
-                    where: {
-                        stock: {
-                            [Op.gt]: requestStock
-                        }
-                    }
-                });
-                res.render("products/index", {
-                    products
-                })
-            }
-        } else if (req.query.search) {
-            const products = await product.findAll({
-                order: [['id', 'DESC']],
-                where: {
-                    name: {
-                        [Op.substring]: req.query.search
-                    }
-                }
-            });
-            res.render("products/index", {
-                products
-            })
-        } else {
-            const products = await product.findAll({
-                order: [['stock', 'ASC']],
-            });
-            res.render("products/index", {
-                products
-            })
-        }
-    } catch (err) {
-        res.status(400).json({
-            status: 'failed',
-            message: err.message
-        })
-    }
-})
+//         // melakukan check jika ada req.query.stock
+//         if (req.query.stock) {
+//             // parse req.query.stock yang awalnya string => number
+//             const requestStock = Number(req.query.stock)
+//             // sheck maunya query apa, kurang dari atau lebih dari
+//             if (req.query.filter === 'kurang') {
+//                 // proses ambil data product sesuai request query stock kurang dari
+//                 const products = await product.findAll({
+//                     order: [['id', 'ASC']],
+//                     where: {
+//                         stock: {
+//                             [Op.lt]: requestStock
+//                         }
+//                     }
+//                 });
+//                 res.render("products/index", {
+//                     products
+//                 })
+//             } else {
+//                 const products = await product.findAll({
+//                     order: [['id', 'ASC']],
+//                     where: {
+//                         stock: {
+//                             [Op.gt]: requestStock
+//                         }
+//                     }
+//                 });
+//                 res.render("products/index", {
+//                     products
+//                 })
+//             }
 
-app.get('/admin/products/create', async (req, res) => {
-    res.render("products/create")
-})
+//         } else if (req.query.search) {
+//             const products = await product.findAll({
+//                 order: [['id', 'ASC']],
+//                 where: {
+//                     name: {
+//                         [Op.substring]: req.query.search
+//                     }
+//                 }
+//             });
+//             res.render("products/index", {
+//                 products
+//             })
+//         } else {
+//             // proses get add product data
+//             const products = await product.findAll({
+//                 // ini untuk order by id ascending (dari atas ke bawah) kalau descending (dari bawah ke atas)
+//                 order: [['id', 'ASC']]
+//             });
+//             res.render("products/index", {
+//                 products
+//             })
+//         }
+//     } catch (err) {
+//         res.status(400).json({
+//             status: 'failed',
+//             message: err.message
+//         })
+//     }
+// })
 
-app.post('/products/create', upload.single('image'), async (req, res) => {
-    const { name, price, stock } = req.body
+// app.get('/admin/products/create', upload.single('image'),async (req, response) => {
+//     response.render("products/create")
+// })
+
+app.post('/products/create', upload.single('image'),async (req, res) => {
+    const {name, price, stock} = req.body
     const file = req.file
 
-    console.log(file)
+    // proses untuk dapat extention file (.jpg)
+    // console.log(file)
 
-    // untuk dapat extension file
-    // ImageBitmap.jpg => jpg itu extension nya
     const split = file.originalname.split('.');
     const ext = split[split.length - 1];
+    
 
     // proses upload file ke imagekit
+
     const img = await imagekit.upload({
         file: file.buffer, // required
         fileName: `IMG-${Date.now()}.${ext}`,
     })
+    console.log(img.url)
 
-    const data = await product.create({
+    await product.create({
         name,
         price,
         stock,
         imageUrl: img.url
     })
     res.redirect(200, "/admin/products")
-    // res.status(201).json({
-    //     data 
-    // })
 })
 
 app.get('/admin/products/edit/:id', async (req, res) => {
