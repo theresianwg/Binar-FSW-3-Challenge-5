@@ -4,10 +4,10 @@ const shopController = require('../controller/shopController');
 
 // shops
 router.get('/', Auth, shopController.getShops)
-router.get('/search', shopController.searchShops)
-router.get('/:id', shopController.getShopById)
-router.put('/:id', shopController.editShop)
-router.delete('/:id', shopController.deleteShop)
+router.get('/search', Auth, shopController.searchShops)
+router.get('/:id', Auth, shopController.getShopById)
+router.put('/:id', Auth, shopController.editShop)
+router.delete('/:id',Auth, shopController.deleteShop)
 router.post('/shops', Auth, shopController.createShop)
 
 module.exports = router
