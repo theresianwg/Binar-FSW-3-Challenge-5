@@ -1,8 +1,11 @@
 const { product } = require('../models');
-// const { default: axios } = require('axios');
+const { default: axios } = require('axios');
 const { Op } = require('sequelize');
 // const imagekit = require('./lib/imagekit');
 // const upload = require('./middleware/uploader');
+
+// proses baca json 
+const bodyParser = require('body-parser');
 
 async function getProduct (req, res){
     try{
@@ -71,7 +74,46 @@ async function createProduct (req, res){
     res.render("products/create")
 }
 
+async function editProduct (req, res){
+    // const productDetail = await product.findByPk(req.params.id);
+    const productDetail = await axios.get(`http://localhost:3000/api/products/${req.params.id}`)
+    console.log(productDetail.data)
+    res.render("products/edit", {
+        title: "Edit",
+        productDetail: productDetail.data
+    })
+}
+
+async function updateProduct (req, res){
+    const id = req.params.id
+    const { name, price, stock } = req.body
+    await product.update({
+        name,
+        price,
+        stock
+    }, {
+        where: {
+            id
+        }
+    })
+    res.redirect(200, "/admin/products")
+}
+
+async function deleteProduct (req, res){
+    const id = req.params.id
+    await product.destroy({
+        where: {
+            id
+        }
+    })
+    res.redirect(200, "/admin/products")
+}
+
+
 module.exports = {
     getProduct,
-    createProduct
+    createProduct,
+    editProduct,
+    updateProduct,
+    deleteProduct,
 }

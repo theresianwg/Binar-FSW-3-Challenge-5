@@ -74,7 +74,101 @@ async function editUser(req, res) {
     }
 }
 
+// validasi 
 async function deleteUser(req, res) {
+//     if ("Apakah Anda yakin ingin menghapus data ini?") {
+//         // kode untuk menghapus data
+//       }
+
+//     try {
+
+//         const id = req.params.id
+//         await users.destroy({
+//             where: {
+//                 id
+//             }
+//         })
+        
+//         // function deleteData() {
+//         //     if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+//         //       // kode untuk menghapus data
+//         //     }
+//         //   }
+        
+//         // function validatePassword() {
+//         const password = req.params.id('password').value;
+//         if (password === 'kata sandi Anda') {
+//             res.status(200).json({
+//                 'status': 'success',
+//                 'message': `data ${id} ini berhasil di hapus`
+//             })
+//             return true;
+//         } else {
+//             alert("Kata sandi salah. Silakan coba lagi.");
+//             res.status(400).json({
+//                 'status': 'failed',
+//                 'message': `err.message`
+//             })
+//             return false;
+//         }
+//         // }
+
+//         // const id = req.params.id
+//         // await users.destroy({
+//         //     where: {
+//         //         id
+//         //     }
+//         // })
+
+//         // res.status(200).json({
+//         //     'status': 'success',
+//         //     'message': `data ${id} ini berhasil di hapus`
+//         // })
+//     } 
+//     // catch (err) {
+//     //     // res.status(400).message(err.message)
+//     //     res.status(400).json({
+//     //             'status': 'failed',
+//     //             'message': err.message
+//     //         })
+//     // }
+// }
+
+//     try {
+//         const id = req.params.id
+//         await users.destroy({
+//             where: {
+//                 id
+//             }
+//         })
+
+//         // Jika user dengan ID yang diberikan tidak ditemukan
+//         if (!user) { 
+//             return res.status(404).json({ error: `User dengan ${id} tidak ditemukan` });
+//           }
+
+//         const confirmed = window.confirm(`Are you sure you want to delete user ${username}?`);
+
+//         if (confirmed) { // Jika pengguna mengkonfirmasi penghapusan data
+//             await deleteUserById(userId); // Menghapus data user dari database
+//             res.status(200).json({
+//             'status': 'success',
+//             'message': `data ${id} ini berhasil di hapus`
+//         })
+
+//     } else { // Jika pengguna tidak mengkonfirmasi penghapusan data
+//         return res.status(200).json({ message: 'User deletion cancelled' });
+//       }
+//     } catch (err) {
+//         res.status(400).json({message: err.message});
+//     }
+// } 
+    
+//     catch (err) {
+//         res.status(400).message(err.message)
+//     }
+// }
+
     try {
         const id = req.params.id
         await users.destroy({
@@ -92,6 +186,7 @@ async function deleteUser(req, res) {
     }
 }
 
+// validasi done
 async function createUser(req, res) {
     try {
         const { username, password } = req.body
@@ -127,6 +222,7 @@ async function createUser(req, res) {
     }
 }
 
+// validasi done
 async function login(req, res) {
     try {
         const { username, password } = req.body
@@ -142,7 +238,7 @@ async function login(req, res) {
         if (!user) {
             res.status(404).json({
                 status: 'failed',
-                message: `user ${username} gk ketemu`
+                message: `user ${username} tidak ditemukan, dimohon untuk melakukan register terlebih dahulu`
             })
         }
         

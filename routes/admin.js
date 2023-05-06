@@ -1,8 +1,9 @@
 const router = require('express').Router();
+const adminController = require('../controller/adminController');
 
-const adminController = require('../controller/admin');
-// const Auth = require('../middleware/auth');
-
-router.get('/', admin.getProduct);
+router.get('/', adminController.getProduct)
+router.get('/create', adminController.createProduct)
+router.get('/edit/:id', adminController.editProduct)
+router.get('/delete/:id', adminController.deleteProduct)
 
 module.exports = router

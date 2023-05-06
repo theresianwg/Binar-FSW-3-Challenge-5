@@ -8,7 +8,7 @@ const swaggerDocument = require('../docs/swagger.json')
 const productController = require('../controller/productController');
 const shopController = require('../controller/shopController');
 
-// middlewares
+// middleware
 const Auth = require('../middleware/auth');
 const checkRole = require('../middleware/checkRole');
 
@@ -16,10 +16,12 @@ const checkRole = require('../middleware/checkRole');
 router.use('/api-docs', swaggerUi.serve)
 router.use('/api-docs', swaggerUi.setup(swaggerDocument))
 
+const Admin = require('./admin');
 const User = require('./users');
 const Shop = require('./shops');
 const Product = require('./products');
  
+router.use('/api/v1/users/', Admin);
 router.use('/api/v1/users/', User);
 router.use('/api/v1/shops/', Shop);
 router.use('/api/v1/products/', Product);
