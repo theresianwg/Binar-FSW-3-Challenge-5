@@ -195,6 +195,21 @@ async function createUser(req, res) {
         // bajuin password nya pake bcrypt / proses enkripsi password
         const hashedPassword = bcrypt.hashSync(password, 10);
 
+        // validasi untuk nama unik
+        const notAvailable = await users.findOne({
+            where: {
+                username
+            }
+        })
+
+        
+        if(notAvailable){
+            res.status(400).json({
+                status: "failed",
+                message: `Data dengan username ${username} telah digunakan`
+            })
+        }
+
         const newUser = await users.create({
             username,
             password : hashedPassword,
