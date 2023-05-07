@@ -48,10 +48,18 @@ async function getProductById(req, res) {
         const id = req.params.id;
         const data = await product.findByPk(id);
 
-        res.status(200).json({
-            status: 'success',
-            data
-        })
+        // validasi jika id tidak ditemukan
+         if (data) {
+            res.status(200).json({
+                status: "success",
+                data,
+            });
+        } else {
+            res.status(404).json({
+                status : "failed",
+                message: "Id tidak terdaftar"
+            });
+        }
     } catch (err) {
         res.status(404).json({
             status: 'failed',

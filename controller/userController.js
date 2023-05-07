@@ -10,6 +10,7 @@ async function getUsers(req, res) {
 
         res.status(200).json({
             status: 'success',
+            message: 'berikut data yang ditampilkan',
             data
         })
     } catch (err) {
