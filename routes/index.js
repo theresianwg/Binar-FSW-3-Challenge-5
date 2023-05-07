@@ -21,7 +21,7 @@ const User = require('./users');
 const Shop = require('./shops');
 const Product = require('./products');
  
-router.use('/api/v1/users/', Admin);
+router.use('/api/v1/admin/', Admin);
 router.use('/api/v1/users/', User);
 router.use('/api/v1/shops/', Shop);
 router.use('/api/v1/products/', Product);
